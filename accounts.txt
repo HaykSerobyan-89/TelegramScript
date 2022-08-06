@@ -1,0 +1,5 @@
+phone_number,App api_id,App api_hash
+374xxxxxxxx,xxxxxxxx,xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+create App by this link
+https://my.telegram.org/apps
