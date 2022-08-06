@@ -23,7 +23,7 @@ try:
         with client:
             client.start()
             # client.loop.run_until_complete(send_message(client))
-    print(clients)
+
     with clients[0]:
         client.loop.run_until_complete(scraper(clients[0]))
 

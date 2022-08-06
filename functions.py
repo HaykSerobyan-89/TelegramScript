@@ -21,7 +21,7 @@ with open('received.csv', 'w', encoding='UTF8') as f:
     writer.writerow(header)
 
 
-def get_groups_from_file(file="groups.text") -> list:
+def get_groups_from_file(file="groups.txt") -> list:
     groups = []
     if os.path.exists(file):
         with open(file) as f:
@@ -37,10 +37,10 @@ def del_first_row():
     username = ''
     user = list()
 
-    with open('all_users.txt', 'r') as fin:
+    with open('all_users.txt', 'r', encoding='utf-8') as fin:
         data = fin.read().splitlines(True)
         first_row = data[0].strip('\n')
-    with open('all_users.txt', 'w') as fout:
+    with open('all_users.txt', 'w', encoding='utf-8') as fout:
         fout.writelines(data[1:])
     username = first_row.split('-')[-1]
     user.append(first_row.split('-')[1])
@@ -59,7 +59,7 @@ def del_first_row():
         user.append(first_row.split('-')[0])
         user.append('Sent')
 
-    with open('received.csv', 'a+') as f:
+    with open('received.csv', 'a+', encoding='utf-8') as f:
         # create the csv writer
         write = csv.writer(f)
         # write a row to the csv file
@@ -116,11 +116,11 @@ async def scraper(client):
             else:
                 user_info += ' -'
             if participant.username is not None:
-                user_info += participant.username
+                user_info += participant.username + '\n'
             else:
                 continue
-            with open(f'all_users.txt', 'a+') as outfile:
-                outfile.write(user_info + "\n")
+            with open(f'all_users.txt', 'a+', encoding='utf-8') as outfile:
+                outfile.write(user_info)
 
     print(f"{GREEN}TOTAL USERS COUNT {len(all_participants)}{COLOR_END}")
 
@@ -131,10 +131,10 @@ async def send_message(client):
     # send message
     message = ''
     i = 1
-    with open('message.txt', 'r') as f:
+    with open('message.txt', 'r', encoding='utf-8') as f:
         message += f.read()
         try:
-            with open('all_users.txt', 'r') as file:
+            with open('all_users.txt', 'r', encoding='utf-8') as file:
                 rows_count = len(file.readlines())
                 file.close()
 
