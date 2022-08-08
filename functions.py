@@ -2,13 +2,10 @@ import csv
 import os
 import time
 from telethon.errors.rpcerrorlist import ChatAdminRequiredError
-from termcolor import colored, cprint
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.types import ChannelParticipantsSearch, PeerChannel
 
 all_participants = []
-YELLOW, GREEN, PURPLE = '\033[01;03;04;38;05;214m', '\033[01;03;38;05;46m', '\033[01;03;38;05;201m'
-COLOR_END = '\033[0m'
 
 header = ['ID', 'NAME', 'SURNAME', 'USERNAME', 'PHONE', 'GROUP', 'MESSAGE']
 message_sent = []
@@ -28,7 +25,7 @@ def get_groups_from_file(file="groups.txt") -> list:
             lines = f.readlines()
         groups = [el[:-1] if el.endswith('\n') else el for el in lines]
     else:
-        print("Please add 'groups.text' file with group names or ids in this directory . . .")
+        print("Please add 'groups.txt' file with group names or ids in this directory . . .")
     return groups
 
 
@@ -81,7 +78,7 @@ async def scraper(client):
         try:
             my_channel = await client.get_entity(entity)
         except ValueError:
-            print(colored(f'{str(entity)}: Correct entity name or id', 'red', attrs=['blink']))
+            print(f'{str(entity)}: Correct entity name or id')
             continue
         group_users = []
         while True:
@@ -90,13 +87,11 @@ async def scraper(client):
                     my_channel, ChannelParticipantsSearch(''), offset, limit,
                     hash=0
                 ))
-                print(colored(f'Scraping from [ \033[01;03;38;05;226m{my_channel.title}{COLOR_END} ] '
-                              f'group: \033[01;03;38;05;226m{len(group_users)}{COLOR_END}', 'magenta',
-                              attrs=['concealed']))
+                print(f'Scraping from [ {my_channel.title}] group: {len(group_users)}')
                 if not participants.users:
                     break
             except ChatAdminRequiredError:
-                print(colored(f'{my_channel.title}: This group is closed', 'red', attrs=['blink']))
+                print(f'{my_channel.title}: This group is closed')
                 break
 
             all_participants.extend(participants.users)
@@ -122,12 +117,12 @@ async def scraper(client):
             with open(f'all_users.txt', 'a+', encoding='utf-8') as outfile:
                 outfile.write(user_info)
 
-    print(f"{GREEN}TOTAL USERS COUNT {len(all_participants)}{COLOR_END}")
+    print(f"TOTAL USERS COUNT {len(all_participants)}")
 
 
 async def send_message(client):
     me = await client.get_me()
-    print(f'{YELLOW}Start sending messages with {me.phone} account{COLOR_END}')
+    print(f'Start sending messages with {me.phone} account')
     # send message
     message = ''
     i = 1
@@ -143,28 +138,23 @@ async def send_message(client):
                 user_info, username = del_first_row()
 
                 user_entity = await client.get_entity(username)
-                user_info = f'{GREEN}Id: {COLOR_END}' + f"{PURPLE}" + \
-                            str(user_entity.id) + f'; {COLOR_END}'
+                user_info = f'Id: ' + str(user_entity.id)
                 if user_entity.first_name is not None:
-                    user_info += f'{GREEN}Name: {COLOR_END}' + f"{PURPLE}" + \
-                                 user_entity.first_name + f'; {COLOR_END}'
+                    user_info += f' Name: ' + user_entity.first_name
                 if user_entity.last_name is not None:
-                    user_info += f'{GREEN}Surname: {COLOR_END}' + f"{PURPLE}" + \
-                                 user_entity.last_name + f'; {COLOR_END}'
+                    user_info += f' Surname: ' + user_entity.last_name
                 if user_entity.username is not None:
-                    user_info += f'{GREEN}Username: {COLOR_END}' + f"{PURPLE}" + \
-                                 user_entity.username + f'; {COLOR_END}'
+                    user_info += f' Username: ' + user_entity.username
                 if user_entity.phone is not None:
-                    user_info += f'{GREEN}Phone: {COLOR_END}' + f"{PURPLE}" + \
-                                 user_entity.phone + f'{COLOR_END}'
+                    user_info += f' Phone: ' + user_entity.phone
 
                 await client.send_message(user_entity, message, file='image.png')
-                time.sleep(5)
-                print(f"{YELLOW}{i}. Sending to user -->{COLOR_END}", user_info)
+                time.sleep(30)
+                print(f"{i}. Sending to user --> ", user_info)
                 i += 1
         except Exception as err:
-            cprint(colored(str(err), 'red', attrs=['blink']))
+            print(str(err))
             await client.disconnect()
             # delete session file after disconnecting
-            # if os.path.exists(f'{me.phone}.session'):
-            #     os.remove(f'{me.phone}.session')
+            if os.path.exists(f'{me.phone}.session'):
+                os.remove(f'{me.phone}.session')
