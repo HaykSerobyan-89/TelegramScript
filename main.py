@@ -24,8 +24,8 @@ try:
             client.start()
             # client.loop.run_until_complete(send_message(client))
 
-    # with clients[0]:
-    #     client.loop.run_until_complete(scraper(clients[0]))
+    with clients[0]:
+        client.loop.run_until_complete(scraper(clients[0]))
 
     time.sleep(10)
     for client in clients:
