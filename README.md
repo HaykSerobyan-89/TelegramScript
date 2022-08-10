@@ -1,6 +1,6 @@
 <h1 align="center"> :zap: Telegram Scraper :zap:</h1>
-
-![](https://img.shields.io/badge/Python-3.9.7-brightgreen) ![](https://img.shields.io/badge/Telethon-1.24.0-brightgreen)
+![](https://img.shields.io/badge/Python-3.9.7-brightgreen) 
+![](https://img.shields.io/badge/Telethon-1.24.0-brightgreen)
 
 ## *Installation*
 ### ***Installation in Windows***
