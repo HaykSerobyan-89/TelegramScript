@@ -1,4 +1,4 @@
-import os
+import socks
 import time
 from telethon import TelegramClient
 from functions import scraper, send_message
@@ -7,12 +7,14 @@ clients = []
 
 with open('accounts.txt', 'r') as f:
     for line in f.readlines():
-        phone, api_id, api_hash = line.split(',')
+        phone, api_id, api_hash, ip, port = line.split(',')
         api_id = int(api_id)
-        if api_hash.endswith('\n'):
-            api_hash = api_hash[:-1]
+        if port.endswith('\n'):
+            port = int(port[:-1])
+        else:
+            port = int(port)
         try:
-            client = TelegramClient(phone, api_id, api_hash)
+            client = TelegramClient(phone, api_id, api_hash, proxy=(socks.SOCKS5, ip, port, True))
             clients.append(client)
         except Exception as err:
             print(err)
@@ -35,6 +37,6 @@ try:
 except KeyboardInterrupt as err:
     print('\n!!! THE PROGRAM STOPPED BY USER !!!')
     print('     ALL SESSIONS ARE DELETED')
-    for file in os.listdir():
-        if file.endswith('.session'):
-            os.remove(file)
+    # for file in os.listdir():
+    #     if file.endswith('.session'):
+    #         os.remove(file)

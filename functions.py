@@ -148,7 +148,7 @@ async def send_message(client):
                 if user_entity.phone is not None:
                     user_info += f' Phone: ' + user_entity.phone
 
-                await client.send_message(user_entity, message, file='image.png')
+                # await client.send_message(user_entity, message, file='image.png')
                 time.sleep(30)
                 print(f"{i}. Sending to user --> ", user_info)
                 i += 1
@@ -156,5 +156,5 @@ async def send_message(client):
             print(str(err))
             await client.disconnect()
             # delete session file after disconnecting
-            if os.path.exists(f'{me.phone}.session'):
-                os.remove(f'{me.phone}.session')
+            # if os.path.exists(f'{me.phone}.session'):
+            #     os.remove(f'{me.phone}.session')
